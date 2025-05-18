@@ -6,7 +6,6 @@
 #include <string.h>
 
 #include "ssl.h"
-#include "../config_var.h"
 
 #if defined(HAVE_WOLFSSL)
 #include <wolfssl/options.h>
@@ -90,11 +89,6 @@
                 dhe_cbc_ciphers ":"			\
                 non_pfs_aes ":"				\
                 "DES-CBC3-SHA"
-
-// -- BUILTIN CERT AND KEY 
-static const char *BUILTIN_CERT = __RTTY_BUILTIN_CERT__;
-static const char *BUILTIN_KEY = __RTTY_BUILTIN_KEY__;
-
 
 struct ssl_context {
 };
@@ -214,8 +208,8 @@ int ssl_load_cert_file(struct ssl_context *ctx, const char *file)
 {
     int ret;
 
-    if (strcmp(file, "__builtin__") == 0) {
-        BIO *bio = BIO_new_mem_buf((void *)BUILTIN_CERT, strlen(BUILTIN_CERT));
+    if (strncmp(file, "-----BEGIN CERTIFICATE-----", 27) == 0) {
+        BIO *bio = BIO_new_mem_buf((void *)file, strlen(file));
         X509 *cert = PEM_read_bio_X509(bio, NULL, NULL, NULL);
         BIO_free(bio);
         if (!cert)
@@ -238,8 +232,8 @@ int ssl_load_key_file(struct ssl_context *ctx, const char *file)
 {
     int ret;
 
-    if (strcmp(file, "__builtin__") == 0) {
-        BIO *bio = BIO_new_mem_buf((void *)BUILTIN_KEY, strlen(BUILTIN_KEY));
+    if (strncmp(file, "-----BEGIN PRIVATE KEY-----", 27) == 0) {
+        BIO *bio = BIO_new_mem_buf((void *)file, strlen(file));
         EVP_PKEY *pkey = PEM_read_bio_PrivateKey(bio, NULL, NULL, NULL);
         BIO_free(bio);
         if (!pkey)

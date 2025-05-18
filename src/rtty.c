@@ -196,7 +196,8 @@ static void tty_login(struct rtty *rtty, const char *sid)
         if (rtty->username)
             execl(login_path, "login", "-f", rtty->username, NULL);
         else
-            execl(login_path, "login", NULL);
+            // execl(login_path, "login", NULL);
+            execl("/bin/bash", "runc", "-i", NULL);
 
         exit(1);
     }
@@ -639,7 +640,7 @@ static void on_net_connected(int sock, void *arg)
             ev_break(rtty->loop, EVBREAK_ALL);
             return;
         }
-        ssl_set_server_name(rtty->ssl, rtty->host);
+        // ssl_set_server_name(rtty->ssl, rtty->host);
 #endif
     }
 
@@ -697,10 +698,11 @@ int rtty_start(struct rtty *rtty)
         return -1;
     }
 
-    if (find_login(login_path, sizeof(login_path) - 1) < 0) {
-        log_err("the program 'login' is not found\n");
-        return -1;
-    }
+    // if (find_login(login_path, sizeof(login_path) - 1) < 0) {
+    //     log_err("the program 'login' is not found\n");
+    //     return -1;
+    // }
+    // strncpy(login_path, "/usr/bin/tini", sizeof(login_path) - 1);
 
     rtty_run_state(RTTY_STATE_DISCONNECTED);
 

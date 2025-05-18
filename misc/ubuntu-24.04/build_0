@@ -1,0 +1,14 @@
+#!/bin/sh
+
+CN=bu24
+BI=ccr.ccs.tencentyun.com/muse/build:ubuntu-24.04
+
+docker run -d --name=$CN -v /tmp:/tmp \
+-v $(pwd):$(pwd) -w $(pwd) --init $BI \
+sleep 3600000
+
+
+apt-get update
+apt-get install -y libev-dev
+apt-get install -y libssl-dev
+# apt install libev-dev

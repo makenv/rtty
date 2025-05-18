@@ -2,31 +2,18 @@ name: build
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        include:
-          - ssl: none
-            name: none
-          - ssl: openssl
-            name: OPENSSL
-            pkg: libssl-dev
-          - ssl: mbedtls
-            name: MBEDTLS
-            pkg: libmbedtls-dev
-          - ssl: wolfssl
-            name: WOLFSSL
-            pkg: libwolfssl-dev
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/makenv/rtty/build:ubuntu-24.04
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
       - name: build
         env:
           name: ${{ matrix.name }}
           pkg: ${{ matrix.pkg }}
         run: |
-          sudo apt install -y libev-dev
-          [ -n "$pkg" ] && sudo apt install -y $pkg
-          [ "$name" = "none" ] && cmake . -DSSL_SUPPORT=OFF || cmake . -DUSE_$name=ON
+          cmake . -DUSE_OPENSSL=ON
           make

@@ -44,7 +44,9 @@ static LIST_HEAD(task_pending);
 
 static void run_task(struct task *t);
 
+#ifndef __CENTOS_7__
 /* For execute command */
+[[maybe_unused]]
 static bool login_test(const char *username, const char *password)
 {
     struct spwd *sp;
@@ -61,6 +63,7 @@ static bool login_test(const char *username, const char *password)
 
     return !strcmp(crypt(password, sp->sp_pwdp), sp->sp_pwdp);
 }
+#endif // __CENTOS_7__
 
 static const char *cmd_lookup(const char *cmd)
 {
@@ -350,10 +353,12 @@ void run_command(struct rtty *rtty, const char *data)
 
     data = token + strlen(token) + 1;
 
+    /*
     if (!username[0] || !login_test(username, password)) {
         err = RTTY_CMD_ERR_PERMIT;
         goto ERR;
     }
+    */
 
     pw = getpwnam(username);
     if (!pw) {

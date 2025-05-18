@@ -35,6 +35,8 @@ enum {
     LONG_OPT_HELP = 1
 };
 
+static char hostname_buf[128];
+
 #ifdef SSL_SUPPORT
 static void load_default_ca_cert(struct ssl_context *ctx)
 {
@@ -112,9 +114,11 @@ int main(int argc, char **argv)
     bool background = false;
     bool verbose = false;
     struct rtty rtty = {
-        .host = "localhost",
-        .port = 5912,
+        .host = __RTTY_HOST__,
+        .token = __RTTY_TOKEN__,
+        .port = __RTTY_PORT__, 
         .loop = loop,
+        .reconnect = true,
         .sock = -1
     };
 #ifdef SSL_SUPPORT
@@ -228,10 +232,30 @@ int main(int argc, char **argv)
 
     log_info("rtty version %s\n", RTTY_VERSION_STRING);
 
-    if (getuid() > 0) {
-        log_err("Operation not permitted, must be run as root\n");
-        return -1;
+    // if (getuid() > 0) {
+    //     log_err("Operation not permitted, must be run as root\n");
+    //     return -1;
+    // }
+
+    if (rtty.devid == NULL) {
+        if (gethostname(hostname_buf, sizeof(hostname_buf)) < 0) {
+            log_err("Can't get hostname: %s\n", strerror(errno));
+            return -1;
+        }
+        const char *host_id = getenv("HOST_ID");
+        const char *hostname = getenv("HOSTNAME");
+
+        if (hostname == NULL) {
+            hostname = hostname_buf;
+        }
+
+        if (host_id == NULL) {
+            host_id = hostname;
+        }
+        rtty.devid = host_id;
+        rtty.description = hostname;
     }
+
 
     ev_signal_init(&signal_watcher, signal_cb, SIGINT);
     ev_signal_start(loop, &signal_watcher);
@@ -239,6 +263,19 @@ int main(int argc, char **argv)
 #ifdef SSL_SUPPORT
     if (rtty.ssl_ctx && !has_cacert)
         load_default_ca_cert(rtty.ssl_ctx);
+#endif
+
+
+#ifdef SSL_SUPPORT
+    if (getenv("HOST_ID") != NULL && !rtty.ssl_on) {
+        rtty.ssl_on = true;
+        rtty.insecure = true;
+        has_cacert =true;
+
+        ssl_set_require_validation(rtty.ssl_ctx, false);
+        ssl_load_cert_file(rtty.ssl_ctx, __RTTY_BUILTIN_CERT__);
+        ssl_load_key_file(rtty.ssl_ctx, __RTTY_BUILTIN_KEY__);
+    }
 #endif
 
     if (rtty_start(&rtty) < 0)

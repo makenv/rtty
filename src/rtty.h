@@ -29,6 +29,7 @@
 #include <ev.h>
 
 #include "config.h"
+#include "config_var.h"
 #include "buffer.h"
 #include "file.h"
 #include "list.h"
