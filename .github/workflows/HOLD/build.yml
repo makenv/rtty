@@ -1,0 +1,19 @@
+name: build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/makenv/rtty/build:ubuntu-24.04
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: build
+        env:
+          name: ${{ matrix.name }}
+          pkg: ${{ matrix.pkg }}
+        run: |
+          cmake . -DUSE_OPENSSL=ON
+          make

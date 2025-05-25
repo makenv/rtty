@@ -17,10 +17,9 @@ endif()
 if (BUILD_STATIC)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-set(CMAKE_C_COMPILER musl-gcc)
+set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 endif()
 
-
-#set(CMAKE_VERBOSE_MAKEFILE ON)
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 
 add_subdirectory(src)
