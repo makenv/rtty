@@ -27,6 +27,21 @@ services:
       - .:/ws
       - ./misc/build-main:/build
 
+
+  u22-static:
+    container_name: u22
+    hostname: u22
+    image: ccr.ccs.tencentyun.com/muse/build:rtty-jammy
+    restart: no
+    command: ["/build"]
+    working_dir: "/ws"
+    environment:
+      BUILD_NAME: jammy-static
+      BUILD_STATIC: yes
+    volumes:
+      - .:/ws
+      - ./misc/build-main:/build
+
   alpine:
     container_name: alpine
     hostname: alpine
