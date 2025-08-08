@@ -1,0 +1,68 @@
+name: rtty
+
+services:
+  u24:
+    container_name: u24
+    hostname: u24
+    image: ccr.ccs.tencentyun.com/muse/build:rtty-noble
+    restart: no
+    command: ["/build"]
+    working_dir: "/ws"
+    environment:
+      BUILD_NAME: noble
+    volumes:
+      - .:/ws
+      - ./misc/build-main:/build
+
+  u22:
+    container_name: u22
+    hostname: u22
+    image: ccr.ccs.tencentyun.com/muse/build:rtty-jammy
+    restart: no
+    command: ["/build"]
+    working_dir: "/ws"
+    environment:
+      BUILD_NAME: jammy
+    volumes:
+      - .:/ws
+      - ./misc/build-main:/build
+
+  alpine:
+    container_name: alpine
+    hostname: alpine
+    image: ccr.ccs.tencentyun.com/muse/build:rtty-alpine
+    restart: no
+    command: ["/build"]
+    working_dir: "/ws"
+    environment:
+      BUILD_NAME: alpine
+    volumes:
+      - .:/ws
+      - ./misc/build-main:/build
+  
+  alpine-static:
+    container_name: alpine
+    hostname: alpine
+    image: ccr.ccs.tencentyun.com/muse/build:rtty-alpine
+    restart: no
+    command: ["/build"]
+    working_dir: "/ws"
+    environment:
+      BUILD_NAME: alpine-static
+    volumes:
+      - .:/ws
+      - ./misc/build-static:/build
+  
+  u24-static:
+    container_name: u24
+    hostname: u24
+    image: ccr.ccs.tencentyun.com/muse/build:rtty-noble
+    restart: no
+    command: ["/build"]
+    working_dir: "/ws"
+    environment:
+      BUILD_NAME: noble-static
+    volumes:
+      - .:/ws
+      - ./misc/build-static:/build
+

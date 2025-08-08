@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+BUILD_ROOT=$(pwd)
+
+mkdir -p build/$BUILD_NAME
+cd build/$BUILD_NAME
+
+cmake -DUSE_OPENSSL=ON /ws
+make
+
+mkdir -p $BUILD_ROOT/target/$BUILD_NAME
+cp src/rtty $BUILD_ROOT/target/$BUILD_NAME
