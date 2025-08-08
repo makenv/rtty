@@ -49,9 +49,10 @@ services:
     working_dir: "/ws"
     environment:
       BUILD_NAME: alpine-static
+      BUILD_STATIC: yes
     volumes:
       - .:/ws
-      - ./misc/build-static:/build
+      - ./misc/build-main:/build
   
   u24-static:
     container_name: u24
