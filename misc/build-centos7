@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -eu
+BUILD_ROOT=$(pwd)
+
+mkdir -p build/$BUILD_NAME
+cd build/$BUILD_NAME
+
+OPTIONS="-DUSE_OPENSSL=ON"
+if [ -n "${BUILD_STATIC:-}" ] ; then
+OPTIONS="$OPTIONS -DBUILD_STATIC=ON"
+fi
+
+cmake3 $OPTIONS /ws
+make
+
+mkdir -p $BUILD_ROOT/target/$BUILD_NAME
+cp src/rtty $BUILD_ROOT/target/$BUILD_NAME
+strip $BUILD_ROOT/target/$BUILD_NAME/rtty

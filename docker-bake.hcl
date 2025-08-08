@@ -1,8 +1,14 @@
 group "build" {
-  targets = ["noble", "jammy", "alpine"]
+  targets = ["noble", "jammy", "alpine", "centos7"]
 }
 
 # ===
+target "centos7" {
+  context = "misc/build"
+  dockerfile = "Dockerfile.centos7"
+  tags = ["ccr.ccs.tencentyun.com/muse/build:rtty-centos7"]
+}
+
 target "alpine" {
   context = "misc/build"
   dockerfile = "Dockerfile.alpine"

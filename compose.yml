@@ -63,7 +63,34 @@ services:
     working_dir: "/ws"
     environment:
       BUILD_NAME: noble-static
+      BUILD_STATIC: yes
     volumes:
       - .:/ws
-      - ./misc/build-static:/build
+      - ./misc/build-main:/build
 
+  centos7:
+    container_name: centos7
+    hostname: centos7
+    image: ccr.ccs.tencentyun.com/muse/build:rtty-centos7
+    restart: no
+    command: ["/build"]
+    working_dir: "/ws"
+    environment:
+      BUILD_NAME: centos7
+    volumes:
+      - .:/ws
+      - ./misc/build-centos7:/build
+
+  centos7-static:
+    container_name: centos7
+    hostname: centos7
+    image: ccr.ccs.tencentyun.com/muse/build:rtty-centos7
+    restart: no
+    command: ["/build"]
+    working_dir: "/ws"
+    environment:
+      BUILD_NAME: centos7-static
+      BUILD_STATIC: yes
+    volumes:
+      - .:/ws
+      - ./misc/build-centos7:/build
