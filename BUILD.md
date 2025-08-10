@@ -1,10 +1,13 @@
 ##
 
 ```
-bake build
+bake build-all
 ```
 
 ```
-compose run --rm u24
-compose run --rm u22-static
+bake \
+ --set "*.args.HTTP_PROXY=http://172.17.0.1:4411" \
+ --set "*.args.HTTPS_PROXY=http://172.17.0.1:4411" \
+ build-all
 ```
+

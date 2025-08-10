@@ -1,6 +1,8 @@
 FROM ubuntu:24.04
 
-RUN --mount=type=cache,target=/var/lib/apt/lists \
+ARG CACHE_ID=noble
+
+RUN --mount=type=cache,target=/var/lib/apt/lists,id=${CACHE_ID}-apt \
 cp -a /etc/apt /etc/apt__ && \
 apt-get update && \
 apt-get install -y openssh-server git build-essential cmake && \

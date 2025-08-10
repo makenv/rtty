@@ -1,0 +1,14 @@
+FROM build-image AS builder
+
+ARG BUILD_NAME
+
+COPY . /ws/
+WORKDIR /ws
+
+RUN misc/build/build-centos7
+
+FROM scratch
+ARG BUILD_NAME
+
+COPY --from=builder /ws/target/$BUILD_NAME/rtty target/$BUILD_NAME/rtty
+

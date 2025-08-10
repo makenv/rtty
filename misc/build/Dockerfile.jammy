@@ -1,6 +1,7 @@
 FROM ubuntu:22.04
+ARG CACHE_ID=jammy
 
-RUN --mount=type=cache,target=/var/lib/apt/lists \
+RUN --mount=type=cache,target=/var/lib/apt/lists,id=$CACHE_ID \
 cp -a /etc/apt /etc/apt__ && \
 apt-get update && \
 apt-get install -y openssh-server git build-essential cmake && \

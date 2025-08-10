@@ -1,6 +1,7 @@
 FROM alpine:3.21
 
 RUN --mount=type=cache,target=/var/cache/apk \
+ifconfig -a && \
 apk add bash gcc \
  cmake make musl-dev \
  openssl-dev openssl-libs-static \
